@@ -3,13 +3,14 @@
 *Vincent Billaut, Pierre-Louis Cedoz, Matthieu de Rochemonteix*  
 *CS224W - class project*
 
-## Litterature review
+## Literature review
 
 ### List of resources
 - *Controllability analysis of the directed human protein
 interaction network identifies disease genes and
 drug targets*, Vinayagam and al., 2016
   - `Controllability analysis of the directed human protein interaction network identifies disease genes and drug targets.pdf`
+  - Supporting information, provided by the text authors: `supporting information.pdf`
 - *Identification of new key genes for type 1 diabetes through
 construction and analysis of protein–protein interaction
 networks based on blood and pancreatic islet transcriptomes*, Safari-Alighiarloo and al., 2017
