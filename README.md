@@ -16,7 +16,12 @@ networks based on blood and pancreatic islet transcriptomes*, Safari-Alighiarloo
   - `jdb12483.pdf`
 - *Network Robustness and Fragility: Percolation on Random Graphs*, Callaway and al., 2000
   - `PhysRebLett.85.5468.pdf`
-
+- *A DIseAse MOdule Detection (DIAMOnD)
+Algorithm Derived from a Systematic Analysis of
+Connectivity Patterns of Disease Proteins in the
+Human Interactome*, Ghiassian SD, Menche J, Barabási A-L
+(2015)
+  - `journal.pcbi.1004120.PDF`
 ## Useful links
 
 - [Course info](http://web.stanford.edu/class/cs224w/info.html), notably with instructions for the project
