@@ -2,8 +2,11 @@ from tqdm import tqdm
 import networkx as nx
 
 
-def read_graph(file_name = "data/9606.protein.links.v10.5.paj"):
-    G = nx.DiGraph()
+def read_graph(file_name = "data/9606.protein.links.v10.5.paj",directed = True):
+    if directed:
+        G = nx.DiGraph()
+    else:
+        G = nx.Graph()
     nodes_names=dict()
 
     with open(file_name,'r') as f:
