@@ -2,7 +2,6 @@ from tqdm import tqdm
 import networkx as nx
 
 
-
 def read_graph(file_name = "data/9606.protein.links.v10.5.paj"):
     G = nx.DiGraph()
     nodes_names=dict()
@@ -26,5 +25,3 @@ def read_graph(file_name = "data/9606.protein.links.v10.5.paj"):
         f.close()  # with open(...) does it already
 
     return G
-
-
