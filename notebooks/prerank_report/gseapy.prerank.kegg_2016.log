@@ -1,0 +1,9 @@
+LINE 367 : 2017-11-13 15:38:24,111 [INFO    ] Parsing data files for GSEA.............................
+LINE 87  : 2017-11-13 15:38:24,112 [INFO    ] Downloading and generating Enrichr library gene sets...
+LINE 208 : 2017-11-13 15:38:24,114 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 396 : 2017-11-13 15:38:25,681 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/geneSetLibrary?mode=text&libraryName=KEGG_2016 HTTP/1.1" 200 None
+LINE 139 : 2017-11-13 15:38:26,964 [INFO    ] 0293 gene_sets have been filtered out when max_size=500 and min_size=15
+LINE 143 : 2017-11-13 15:38:26,964 [ERROR   ] No gene sets passed throught filtering condition!!!, try new paramters again!
+Note: Gene names for gseapy is case sensitive.
+LINE 208 : 2017-11-13 15:39:01,269 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 396 : 2017-11-13 15:39:01,576 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/datasetStatistics HTTP/1.1" 200 None
