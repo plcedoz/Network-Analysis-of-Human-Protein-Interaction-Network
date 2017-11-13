@@ -17,7 +17,7 @@ def read_graph(file_name = "data/9606.protein.links.v10.5.paj",directed = True):
             line = f.readline()
             node_id,node_name = line.strip().split()
             node_id =int(node_id)
-            G.add_node(node_id)
+            G.add_node(node_id, name=node_name)
             nodes_names[node_id]=node_name
 
         header2 = f.readline()
