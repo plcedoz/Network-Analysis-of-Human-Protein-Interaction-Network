@@ -29,6 +29,15 @@ features = pipeline.apply(Graph, verbose=True)
 
 gene_list, gene_rank = [], []
 
+#If we pick the score to be the degree:
+scores = features[:,0]
+ordered_nodes_Id = np.array(node_names.keys())[scores.argsort()[::-1]].tolist()
+ordered_nodes_names = np.array(node_names.values())[scores.argsort()[::-1]].tolist()
+gene_rank = scores.copy()
+gene_rank.sort()
+gene_rank = gene_rank[::-1].tolist()
+
+
 #########################
 # Validation
 #########################

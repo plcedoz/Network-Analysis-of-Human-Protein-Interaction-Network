@@ -98,7 +98,7 @@ def get_drugbank(molecule_type="target", subset="all"):
         -subset: "all" or "approved"
         
     """
-    data = pandas.read_csv("validation_datasets/drugbank_%s_%s_polypeptide_ids.csv/all.csv"%(subset, molecule_type))
+    data = pd.read_csv("validation_datasets/drugbank_%s_%s_polypeptide_ids.csv/all.csv"%(subset, molecule_type))
     data = data[data["Species"]=="Human"]
     gene_symbols = data["Gene Name"].values.tolist()
     protein_names = data["Name"].values.tolist()
