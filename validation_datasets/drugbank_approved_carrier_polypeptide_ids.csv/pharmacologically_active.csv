@@ -1,0 +1,12 @@
+ID,Name,Gene Name,GenBank Protein ID,GenBank Gene ID,UniProt ID,Uniprot Title,PDB ID,GeneCard ID,GenAtlas ID,HGNC ID,Species,Drug IDs
+P08185,Corticosteroid-binding globulin,SERPINA6,179971,J02943,P08185,CBG_HUMAN,2VDX; 2VDY; 4BB2; 4C41; 4C49,,SERPINA6,HGNC:1540,Human,DB00180; DB01410
+P54710,Sodium/potassium-transporting ATPase subunit gamma,FXYD2,1575004,U50743,P54710,ATNG_HUMAN,2MKV,,FXYD2,HGNC:4026,Human,DB09479
+P04278,Sex hormone-binding globulin,SHBG,296673,X16349,P04278,SHBG_HUMAN,1D2S; 1F5F; 1KDK; 1KDM; 1LHN; 1LHO; 1LHU; 1LHV; 1LHW,,SHBG,HGNC:10839,Human,DB01406
+P05023,Sodium/potassium-transporting ATPase subunit alpha-1,ATP1A1,219942,D00099,P05023,AT1A1_HUMAN,"",,ATP1A1,HGNC:799,Human,DB09479
+O15540,"Fatty acid-binding protein, brain",FABP7,2632065,AJ002962,O15540,FABP7_HUMAN,1FDQ; 1FE3; 1JJX,,FABP7,HGNC:3562,Human,DB00159
+P05026,Sodium/potassium-transporting ATPase subunit beta-1,ATP1B1,,,P05026,AT1B1_HUMAN,"",,,HGNC:804,Human,DB09479
+P14415,Sodium/potassium-transporting ATPase subunit beta-2,ATP1B2,,,P14415,AT1B2_HUMAN,"",,,HGNC:805,Human,DB09479
+P54709,Sodium/potassium-transporting ATPase subunit beta-3,ATP1B3,,,P54709,AT1B3_HUMAN,"",,,HGNC:806,Human,DB09479
+Q13733,Sodium/potassium-transporting ATPase subunit alpha-4,ATP1A4,,,Q13733,AT1A4_HUMAN,"",,,HGNC:14073,Human,DB09479
+P50993,Sodium/potassium-transporting ATPase subunit alpha-2,ATP1A2,,,P50993,AT1A2_HUMAN,"",,,HGNC:800,Human,DB09479
+P13637,Sodium/potassium-transporting ATPase subunit alpha-3,ATP1A3,,,P13637,AT1A3_HUMAN,"",,,HGNC:801,Human,DB09479
