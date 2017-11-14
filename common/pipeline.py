@@ -14,8 +14,11 @@ class Pipeline:
         current = 0
         for g in self.generators:
             g_res = g.apply(Graph)
+            # print(g_res.shape)
+            # print(result.shape)
+            # print(result[:,current:(current+g.nfeat)].shape)
             if verbose:
                 print(g.get_name())
-            result[n,current:(current+g.nfeat)] = g_res
+            result[:,current:(current+g.nfeat)] = g_res
             current += g.nfeat
         return result

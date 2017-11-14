@@ -15,12 +15,11 @@ class Degree:
 
     def apply(self, Graph):
         n = Graph.number_of_nodes()
+        result = np.zeros((n,self.nfeat))
         if not self.directed:
-            result = np.zeros(n)
             for i in range(n):
                 result[i] = Graph.degree(i)
         else:
-            result = np.zeros((n,2))
             for i in range(n):
                 result[i,0] = Graph.out_degree(i)
                 result[i,1] = Graph.in_degree(i)
@@ -41,13 +40,12 @@ class ExpectedDegree:
 
     def apply(self, Graph):
         n = Graph.number_of_nodes()
+        result = np.zeros((n,self.nfeat))
         if not self.directed:
-            result = np.zeros(n)
             for i in range(n):
                 for j in Graph.neighbors(i):
                     result[i] += Graph[i][j]['weight']
         else:
-            result = np.zeros((n,2))
             for i in range(n):
                 for j in Graph.successors(i):
                     result[i,0] += Graph[i][j]['weight']
