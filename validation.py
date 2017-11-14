@@ -108,7 +108,14 @@ def get_drugbank(molecule_type="target", subset="all"):
     return data
 
 
-def compare_gene_lists(query_gene_list, ref_gene_list):
+def compare_gene_lists(gene_query, gene_ref):
+    
+    N = len(gene_query)
+    n = 100
+    M = len(list(set(gene_query) & set(gene_ref)))
+    m = len(list(set(gene_query[0:n]) & set(gene_ref)))
+    print N,n,M,m
+    
     pass
     #hypergeometric test?
     #Proportion of indispensable vs neutral vs dispensables in the ref_gene_list
