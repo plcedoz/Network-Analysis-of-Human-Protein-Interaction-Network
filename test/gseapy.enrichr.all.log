@@ -1,0 +1,5 @@
+LINE 77  : 2017-11-14 10:41:35,851 [INFO    ] Connecting to Enrichr Server to get latest library names
+LINE 208 : 2017-11-14 10:41:35,853 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 396 : 2017-11-14 10:41:36,164 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/datasetStatistics HTTP/1.1" 200 None
+LINE 208 : 2017-11-14 10:41:50,120 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 396 : 2017-11-14 10:41:50,539 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/datasetStatistics HTTP/1.1" 200 None

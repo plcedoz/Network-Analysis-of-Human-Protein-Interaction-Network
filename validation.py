@@ -13,6 +13,8 @@ def enrichr_validation(gene_list, gene_rank=None, outdir="validation_results", g
     Args:
         -gene_list (list): Gene list to analyze
         -gene_rank (list): Ranking of the genes (according to a scoring function)
+        -outdir (str): Location to save the files
+        -gene_sets (str): Gene set to use for the enrichment
     
     """
     if gene_rank == None:
@@ -22,8 +24,9 @@ def enrichr_validation(gene_list, gene_rank=None, outdir="validation_results", g
         assert type(gene_rank)==list, "please provide gene_rank as a list"
         rnk = pd.DataFrame(np.array([gene_list, gene_rank]).T, columns = ['gene', 'score'])
         enr = gp.enrichr(gene_list=rnk, description='pathway', gene_sets='KEGG_2016', outdir=outdir, cutoff=0.05, format='png')
-
-    return enr.res2d
+    #result = enr.res2d[enr.res2d["Adjusted P-value"]<pvalue]
+    
+    return result
 
 
 def prerank_validation(gene_list, gene_rank, outdir="validation_results", gene_sets='KEGG_2016'):
@@ -34,6 +37,8 @@ def prerank_validation(gene_list, gene_rank, outdir="validation_results", gene_s
     Args:
         -gene_list (list): Gene list to analyze
         -gene_rank (list): Ranking of the genes (according to a scoring function)
+        -outdir (str): Location to save the files
+        -gene_sets (str): Gene set to use for the enrichment
     
     """
     rnk = pd.DataFrame(np.array([gene_list, gene_rank]).T, columns = ['gene', 'score'])
@@ -57,8 +62,9 @@ def get_cancer(filename="validation_datasets/cancer_gene_census.csv"):
             for synonym in synonyms.split(','):
                 if synonym[:3] == "ENS":
                     gene_string.append(synonym)
+    data = {"gene_symbols":gene_symbols, "gene_names":gene_names, "gene_string":gene_string}
     
-    return gene_symbols, gene_names, gene_string
+    return data
 
 
 def get_mendelian(filename="validation_datasets/mim2gene.txt"):
@@ -77,8 +83,9 @@ def get_mendelian(filename="validation_datasets/mim2gene.txt"):
                         gene_entrez.append(line.split('\t')[2])
                         gene_symbols.append(line.split('\t')[3])
                         gene_string.append(line.split('\t')[4])
-
-    return gene_symbols, gene_entrez, gene_string
+    data = {"gene_symbols":gene_symbols, "gene_entrez":gene_entrez, "gene_string":gene_string}
+    
+    return data
 
 
 
@@ -96,8 +103,9 @@ def get_drugbank(molecule_type="target", subset="all"):
     gene_symbols = data["Gene Name"].values.tolist()
     protein_names = data["Name"].values.tolist()
     uniprot_ID = data["UniProt ID"].values.tolist()
+    data = {"gene_symbols":gene_symbols, "protein_names":protein_names, "uniprot_ID":uniprot_ID}
     
-    return gene_symbols, protein_names, uniprot_ID
+    return data
 
 
 def compare_gene_lists(query_gene_list, ref_gene_list):
