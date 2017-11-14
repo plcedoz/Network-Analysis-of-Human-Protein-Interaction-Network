@@ -4,7 +4,7 @@ import networkx as nx
 
 class Degree:
     '''
-    Degree of every node (in/out if directed set to True)
+    Degree of every node (in/out if directed)
     '''
     def __init__(self, directed=False):
         self.directed = directed
@@ -15,7 +15,61 @@ class Degree:
 
     def apply(self, Graph):
         n = Graph.number_of_nodes()
+        if not self.directed:
+            result = np.zeros(n)
+            for i in range(n):
+                result[i] = Graph.degree(i)
+        else:
+            result = np.zeros((n,2))
+            for i in range(n):
+                result[i,0] = Graph.out_degree(i)
+                result[i,1] = Graph.in_degree(i)
+        return result
+
+
+class ExpectedDegree:
+    '''
+    Expected degree of every node, considering every edge is weighted with the
+    probability of its existence (in/out if directed)
+    '''
+    def __init__(self, directed=False):
+        self.directed = directed
+        self.nfeat = 1 + self.directed
+
+    def get_name(self):
+        return "expecteddegree_{}directed".format("" if self.directed else "un")
+
+    def apply(self, Graph):
+        n = Graph.number_of_nodes()
+        if not self.directed:
+            result = np.zeros(n)
+            for i in range(n):
+                for j in Graph.neighbors(i):
+                    result[i] += Graph[i][j]['weight']
+        else:
+            result = np.zeros((n,2))
+            for i in range(n):
+                for j in Graph.successors(i):
+                    result[i,0] += Graph[i][j]['weight']
+                for j in Graph.predecessors(i):
+                    result[i,1] += Graph[j][i]['weight']
+        return result
+
+
+class PageRank:
+    '''
+    PageRank score of every node in the graph (can be quite heavy to compute)
+    '''
+    def __init__(self):
+        self.nfeat = 1
+
+    def get_name(self):
+        return "pagerank"
+
+    def apply(self, Graph):
+        n = Graph.number_of_nodes()
         result = np.zeros(n)
-        for i in range(n):
-            result[i] = Graph.degree(i)
+        pr = nx.algorithms.pagerank(Graph)
+        for i,p in pr.items():
+            result[i] = p
         return result
