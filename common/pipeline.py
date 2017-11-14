@@ -8,13 +8,14 @@ class Pipeline:
         self.generators = featGenList
         self.nfeat = sum([g.nfeat for g in self.generators])
 
-    def apply(self,data,verbose = False):
-        result = np.zeros(self.nfeat)
+    def apply(self,Graph,verbose = False):
+        n = Graph.number_of_nodes()
+        result = np.zeros((n, self.nfeat))
         current = 0
         for g in self.generators:
-            g_res = g.apply(data)
+            g_res = g.apply(Graph)
             if verbose:
                 print(g.get_name())
-            result[current:(current+g.nfeat)] = g_res
+            result[n,current:(current+g.nfeat)] = g_res
             current += g.nfeat
         return result
