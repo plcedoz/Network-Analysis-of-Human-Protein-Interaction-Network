@@ -44,13 +44,13 @@ class ExpectedDegree:
         if not self.directed:
             for i in range(n):
                 for j in Graph.neighbors(i):
-                    result[i] += Graph[i][j]['weight']
+                    result[i] += Graph[i][j]['weight'] / 1000.0
         else:
             for i in range(n):
                 for j in Graph.successors(i):
-                    result[i,0] += Graph[i][j]['weight']
+                    result[i,0] += Graph[i][j]['weight'] / 1000.0
                 for j in Graph.predecessors(i):
-                    result[i,1] += Graph[j][i]['weight']
+                    result[i,1] += Graph[j][i]['weight'] / 1000.0
         return result
 
 
