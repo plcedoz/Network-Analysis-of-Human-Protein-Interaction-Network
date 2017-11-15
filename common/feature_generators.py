@@ -1,7 +1,7 @@
 import numpy as np
 import networkx as nx
 import pickle
-
+from tqdm import tqdm
 
 class FeatureGenerator(object):
     def __init__(self, default_recomputing=False, default_dump=True, prefix=''):
@@ -123,4 +123,24 @@ class PageRank(FeatureGenerator):
         pr = nx.algorithms.pagerank(Graph)
         for i, p in pr.items():
             result[i] = p
+        return result
+
+class ClusteringCoefficient(FeatureGenerator):
+    """
+    Clustering Coefficient
+    """
+    def __init__(self, default_recomputing=False, default_dump=True, prefix=''):
+        super(ClusteringCoefficient, self).__init__(default_recomputing=default_recomputing, default_dump=default_dump,
+                                       prefix=prefix)
+        self.nfeat = 1
+
+    def get_name(self):
+        return "clusteringcoefficient"
+
+    def compute(self,Graph):
+        list_nodes = Graph.nodes()
+        n = len(list_nodes)
+        result = np.zeros(n)
+        for node in tqdm(list_nodes,desc="Clustering Coefficient"):
+            result[node]=nx.algorithms.clustering(Graph, node)
         return result
