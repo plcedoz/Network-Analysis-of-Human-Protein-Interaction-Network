@@ -2,6 +2,7 @@ import numpy as np
 import networkx as nx
 import pickle
 from tqdm import tqdm
+import os
 
 class FeatureGenerator(object):
     def __init__(self, default_recomputing=False, default_dump=True, prefix=''):
@@ -17,6 +18,8 @@ class FeatureGenerator(object):
         pass
 
     def init_filename(self):
+        if not os.path.exists('data/cache/'):
+            os.mkdir('data/cache/')
         self.cache_filename = 'data/cache/{}_featurecache_{}.pkl'.format(self.prefix, self.get_name())
 
     def load_from_cache(self):
