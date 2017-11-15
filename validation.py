@@ -17,8 +17,9 @@ def get_query_and_rank(features, node_names, index=0, mapping_file="validation_d
 
     """
     scores = features[:,index]
-    gene_query_Id = np.array(node_names.keys())[scores.argsort()[::-1]].tolist()
-    gene_query = np.array(node_names.values())[scores.argsort()[::-1]].tolist()
+    order = np.argsort(scores)[::-1]
+    gene_query_Id = [i for i in order]
+    gene_query =[node_names[i] for i in order]
     gene_rank = scores.copy()
     gene_rank.sort()
     gene_rank = gene_rank[::-1].tolist()
@@ -39,7 +40,7 @@ def compare_gene_lists(gene_query, gene_rank, gene_ref):
     n = 100
     M = len(list(set(gene_query) & set(gene_ref)))
     m = len(list(set(gene_query[0:n]) & set(gene_ref)))
-    print N,n,M,m
+    print(N,n,M,m)
     
     pass
     #hypergeometric test?

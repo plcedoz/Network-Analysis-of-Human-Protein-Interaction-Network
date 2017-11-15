@@ -22,7 +22,7 @@ print("Loaded graph:\n\t{} nodes\n\t{} edges".format(
 #########################
 
 # The pipeline object takes as an argument the sequence of features we want
-pipeline = Pipeline(Degree(default_dump=True,default_recomputing=False), ExpectedDegree())
+pipeline = Pipeline(Degree(default_dump=True,default_recomputing=False), ExpectedDegree(default_dump=True,default_recomputing=False))
 features = pipeline.apply(Graph, verbose=True)
 
 
