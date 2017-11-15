@@ -19,10 +19,14 @@ class FeatureGenerator:
         self.cache_filename = 'data/cache/{}_featurecache_{}.pkl'.format(self.prefix,self.get_name())
 
     def load_from_cache(self):
+        if self.cache_filename is None:
+            self.init_filename()
         result = pickle.load(open(self.cache_filename,'rb'))
         return result
 
     def dump_to_cache(self,result):
+        if self.cache_filename is None:
+            self.init_filename()
         pickle.dump(result,open(self.cache_filename,'wb'))
 
 
