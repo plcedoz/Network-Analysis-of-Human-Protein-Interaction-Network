@@ -128,6 +128,27 @@ class PageRank(FeatureGenerator):
             result[i] = p
         return result
 
+
+class BetweennessCentrality(FeatureGenerator):
+    '''
+    Betweenness centrality of every node in the graph (can be quite heavy to compute)
+    '''
+    def __init__(self,default_recomputing = False, default_dump=True,prefix=''):
+        super(Betweenness,self).__init__(default_recomputing = default_recomputing, default_dump=default_dump,prefix=prefix)
+        self.nfeat = 1
+
+    def get_name(self):
+        return "betweenness"
+
+    def compute(self, Graph):
+        n = Graph.number_of_nodes()
+        result = np.zeros(n)
+        cc = nx.closeness_centrality(Graph)
+        for i,c in cc.items():
+            result[i] = c
+        return result
+
+
 class ClusteringCoefficient(FeatureGenerator):
     """
     Clustering Coefficient
