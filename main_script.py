@@ -6,6 +6,9 @@ import networkx as nx
 from read_graph import read_graph
 from common.pipeline import Pipeline
 from common.feature_generators import *
+from validation import *
+from validation_datasets import *
+from GSEA_validation import *
 
 # Loading PPI graph
 Graph, node_names = read_graph(directed=False)
@@ -27,16 +30,7 @@ features = pipeline.apply(Graph, verbose=True)
 # Learning
 #########################
 
-gene_query, gene_rank = [], []
-
-#If we pick the score to be the degree:
-scores = features[:,0]
-gene_query_Id = np.array(node_names.keys())[scores.argsort()[::-1]].tolist()
-gene_query = np.array(node_names.values())[scores.argsort()[::-1]].tolist()
-gene_rank = scores.copy()
-gene_rank.sort()
-gene_rank = gene_rank[::-1].tolist()
-
+gene_query, gene_rank = get_query_and_rank(features, node_names, index=0)
 
 #########################
 # Validation
@@ -48,20 +42,8 @@ enrichr = enrichr_validation(gene_query, gene_rank=None, outdir="validation_resu
 prerank = prerank_validation(gene_query, gene_rank, outdir="validation_results", gene_sets='KEGG_2016')
 
 #Extract relevant gene lists
-cancer = get_cancer()
-mendelian = get_mendelian()
-drugbank_target_all = get_drugbank(molecule_type="target", subset="all")
-drugbank_target_approved = get_drugbank(molecule_type="target", subset="approved")
-drugbank_enzyme_all = get_drugbank(molecule_type="enzyme", subset="all")
-drugbank_enzyme_approved = get_drugbank(molecule_type="enzyme", subset="approved")
-drugbank_carrier_all = get_drugbank(molecule_type="carrier", subset="all")
-drugbank_carrier_approved = get_drugbank(molecule_type="carrier", subset="approved")
-drugbank_transporter_all = get_drugbank(molecule_type="transporter", subset="all")
-drugbank_transporter_approved = get_drugbank(molecule_type="transporter", subset="approved")
 
-gene_ref_formatted = [gene[4:] for gene in cancer['gene_string']]
-gene_query_formatted = [gene[9:] for gene in gene_query]
+gene_ref = get_gene_ref(source="cancer")
 
-compare_gene_lists(gene_query_formatted, gene_ref_formatted)
-
+compare_gene_lists(gene_query, gene_rank, gene_ref)
 
