@@ -1,19 +1,62 @@
 import numpy as np
 import networkx as nx
+import pickle
+
+class FeatureGenerator:
+    def __init__(self,default_recomputing = False, default_dump=True,prefix=''):
+        self.cache_filename = None
+        self.default_recomputing = default_recomputing
+        self.prefix=prefix
+        self.default_dump = default_dump
+
+    def get_name(self):
+        pass
+
+    def compute(self):
+        pass
+
+    def init_filename(self):
+        self.cache_filename = 'data/cache/{}_featurecache_{}.pkl'.format(self.prefix,self.get_name())
+
+    def load_from_cache(self):
+        result = pickle.load(open(self.cache_filename,'rb'))
+        return result
+
+    def dump_to_cache(self,result):
+        pickle.dump(result,open(self.cache_filename,'wb'))
 
 
-class Degree:
+    def apply(self,Graph,recompute=None,dump=None):
+        if recompute is None:
+            recompute = self.default_recomputing
+        if dump is None:
+            dump = self.default_dump
+        if not recompute:
+            try:
+                return self.load_from_cache()
+            except:
+                return self.apply(Graph,recompute=True)
+        else:
+            result = self.compute(Graph)
+            if dump:
+                self.dump_to_cache(result)
+            return result
+
+
+
+class Degree(FeatureGenerator):
     '''
     Degree of every node (in/out if directed)
     '''
-    def __init__(self, directed=False):
+    def __init__(self, directed=False,default_recomputing = True, default_dump=False,prefix=''):
+        super(Degree,self).__init__(default_recomputing = default_recomputing, default_dump=default_dump,prefix=prefix)
         self.directed = directed
         self.nfeat = 1 + self.directed
 
     def get_name(self):
         return "degree_{}directed".format("" if self.directed else "un")
 
-    def apply(self, Graph):
+    def compute(self, Graph):
         n = Graph.number_of_nodes()
         result = np.zeros((n,self.nfeat))
         if not self.directed:
@@ -26,19 +69,20 @@ class Degree:
         return result
 
 
-class ExpectedDegree:
+class ExpectedDegree(FeatureGenerator):
     '''
     Expected degree of every node, considering every edge is weighted with the
     probability of its existence (in/out if directed)
     '''
-    def __init__(self, directed=False):
+    def __init__(self, directed=False,default_recomputing = True, default_dump=False,prefix=''):
+        super(ExpectedDegree,self).__init__(default_recomputing = default_recomputing, default_dump=default_dump,prefix=prefix)
         self.directed = directed
         self.nfeat = 1 + self.directed
 
     def get_name(self):
         return "expecteddegree_{}directed".format("" if self.directed else "un")
 
-    def apply(self, Graph):
+    def compute(self, Graph):
         n = Graph.number_of_nodes()
         result = np.zeros((n,self.nfeat))
         if not self.directed:
@@ -54,17 +98,18 @@ class ExpectedDegree:
         return result
 
 
-class PageRank:
+class PageRank(FeatureGenerator):
     '''
     PageRank score of every node in the graph (can be quite heavy to compute)
     '''
-    def __init__(self):
+    def __init__(self,default_recomputing = False, default_dump=True,prefix=''):
+        super(PageRank,self).__init__(default_recomputing = default_recomputing, default_dump=default_dump,prefix=prefix)
         self.nfeat = 1
 
     def get_name(self):
         return "pagerank"
 
-    def apply(self, Graph):
+    def compute(self, Graph):
         n = Graph.number_of_nodes()
         result = np.zeros(n)
         pr = nx.algorithms.pagerank(Graph)
