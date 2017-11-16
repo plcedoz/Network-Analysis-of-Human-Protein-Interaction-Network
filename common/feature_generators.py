@@ -122,7 +122,7 @@ class PageRank(FeatureGenerator):
 
     def compute(self, Graph):
         n = Graph.number_of_nodes()
-        result = np.zeros(n)
+        result = np.zeros((n, self.nfeat))
         pr = nx.algorithms.pagerank(Graph)
         for i, p in pr.items():
             result[i] = p
@@ -134,7 +134,7 @@ class BetweennessCentrality(FeatureGenerator):
     Betweenness centrality of every node in the graph (can be quite heavy to compute)
     '''
     def __init__(self,default_recomputing = False, default_dump=True,prefix=''):
-        super(Betweenness,self).__init__(default_recomputing = default_recomputing, default_dump=default_dump,prefix=prefix)
+        super(BetweennessCentrality,self).__init__(default_recomputing = default_recomputing, default_dump=default_dump,prefix=prefix)
         self.nfeat = 1
 
     def get_name(self):
@@ -142,9 +142,9 @@ class BetweennessCentrality(FeatureGenerator):
 
     def compute(self, Graph):
         n = Graph.number_of_nodes()
-        result = np.zeros(n)
-        cc = nx.closeness_centrality(Graph)
-        for i,c in cc.items():
+        result = np.zeros((n, self.nfeat))
+        bc = nx.betweenness_centrality(Graph)
+        for i,c in bc.items():
             result[i] = c
         return result
 
@@ -164,7 +164,27 @@ class ClusteringCoefficient(FeatureGenerator):
     def compute(self,Graph):
         list_nodes = Graph.nodes()
         n = len(list_nodes)
-        result = np.zeros(n)
+        result = np.zeros((n, self.nfeat))
         for node in tqdm(list_nodes,desc="Clustering Coefficient"):
             result[node]=nx.algorithms.clustering(Graph, node)
+        return result
+
+    
+class ClosenessCentrality(FeatureGenerator):
+    '''
+    Closeness centrality of every node in the graph (can be quite heavy to compute)
+    '''
+    def __init__(self,default_recomputing = False, default_dump=True,prefix=''):
+        super(ClosenessCentrality,self).__init__(default_recomputing = default_recomputing, default_dump=default_dump,prefix=prefix)
+        self.nfeat = 1
+
+    def get_name(self):
+        return "closeness"
+
+    def compute(self, Graph):
+        n = Graph.number_of_nodes()
+        result = np.zeros((n, self.nfeat))
+        cc = nx.closeness_centrality(Graph)
+        for i,c in cc.items():
+            result[i] = c
         return result
