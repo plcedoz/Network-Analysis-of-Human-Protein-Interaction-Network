@@ -63,5 +63,5 @@ gene_ref = get_gene_ref(source="cancer")
 compare_gene_lists(gene_query, gene_rank, gene_ref)
 for i,feat in enumerate(pipeline.get_generator_names()):
     print("Comparing reference and whole sample on: [{}]".format(feat))
-    print('\t',compare_feature_distribution(features[,i], gene_ref, feat+'_distribution_comparison.png'))
+    print('\t',compare_feature_distribution(features[:,i], gene_ref, feat+'_distribution_comparison.png'))
 print("############\n")
