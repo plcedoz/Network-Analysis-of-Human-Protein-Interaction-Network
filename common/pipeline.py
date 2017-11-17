@@ -6,7 +6,11 @@ class Pipeline:
     '''
     def __init__(self,*featGenList):
         self.generators = featGenList
+        self.generator_names = [g.get_name() for g in self.generators]
         self.nfeat = sum([g.nfeat for g in self.generators])
+
+    def get_generator_names():
+        return self.generator_names
 
     def apply(self,Graph,verbose = False):
         n = Graph.number_of_nodes()
