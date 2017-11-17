@@ -22,7 +22,7 @@ def enrichr_validation(gene_list, gene_rank=None, outdir="validation_results", g
         assert type(gene_rank)==list, "please provide gene_rank as a list"
         rnk = pd.DataFrame(np.array([gene_list, gene_rank]).T, columns = ['gene', 'score'])
         enr = gp.enrichr(gene_list=rnk, description='pathway', gene_sets='KEGG_2016', outdir=outdir, cutoff=0.05, format='png')
-    #result = enr.res2d[enr.res2d["Adjusted P-value"]<pvalue]
+    result = enr.res2d[enr.res2d["Adjusted P-value"]<pvalue]
     
     return result
 
