@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 import gseapy as gp
 import math
+import matplotlib.pyplot as plt
+
+import scipy.stats as ss
+
 from scipy.stats import hypergeom
 
 
@@ -31,7 +35,7 @@ def get_query_and_rank(features, node_names, index=0, mapping_file="validation_d
     gene_rank = [gene for i,gene in enumerate(gene_rank) if gene_query[i] in string_to_symbol.keys()]
     gene_query = [string_to_symbol[gene] for gene in gene_query if gene in string_to_symbol.keys()]
 
-    return gene_query, gene_rank
+    return gene_query, gene_rank, string_to_symbol
 
 
 def compare_gene_lists(gene_query, gene_rank, gene_ref):
@@ -45,3 +49,20 @@ def compare_gene_lists(gene_query, gene_rank, gene_ref):
     pass
     #hypergeometric test?
     #Proportion of indispensable vs neutral vs dispensables in the ref_gene_list
+
+
+def compare_feature_distribution(feature, reference_genes, output_file):
+    sample_genes, sample_scores, string_to_symbol = get_query_and_rank(feature, node_names, index=0)
+    index = {gene:i for i,gene in enumerate(sample_genes)}
+    all_scores = [feature[index[gene]] for gene in sample_genes if gene in index]
+    ref_scores = [feature[index[gene]] for gene in reference_genes if gene in index]
+
+    bins = np.linspace(np.min(feature), np.max(feature), 100)
+    fig = plt.figure()
+    fig.hist(all_scores, bins, alpha=0.5, label='all', normed=True)
+    fig.hist(ref_scores, bins, alpha=0.5, label='ref', normed=True)
+    fig.legend()
+    fig.savefig(output_file)
+    plt.close(fig)
+
+    return ss.mannwhitneyu(all_scores, ref_scores)
