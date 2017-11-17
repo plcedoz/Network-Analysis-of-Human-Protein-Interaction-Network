@@ -1,0 +1,25 @@
+######### Loading Graph #########
+Reading Nodes list
+Reading Edges list
+Loaded graph:
+	19576 nodes
+	5676528 edges
+
+######### Computing/retrieving node features #########
+degree_undirected
+expecteddegree_undirected
+clusteringcoefficient
+
+######### get_query_and_rank() #########
+
+######### Validation #########
+#elements in gene_query : 			17442 (cutoff after 100)
+#elements from gene_ref in gene_query : 	598 (3%)
+#elements from gene_ref in gene_query[0:100] : 	36 (36%)
+Comparing reference and whole sample on: [degree_undirected]
+	 MannwhitneyuResult(statistic=3468089.0, pvalue=3.079290489623442e-44)
+Comparing reference and whole sample on: [expecteddegree_undirected]
+	 MannwhitneyuResult(statistic=3583455.0, pvalue=8.2343213887034953e-39)
+Comparing reference and whole sample on: [clusteringcoefficient]
+	 MannwhitneyuResult(statistic=5083540.0, pvalue=0.29323356818088342)
+############
