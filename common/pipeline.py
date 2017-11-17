@@ -20,6 +20,6 @@ class Pipeline:
             g_res = g.apply(Graph)
             if verbose:
                 print(g.get_name())
-            result[:,current:(current+g.nfeat)] = g_res
+            result[:,current:(current+g.nfeat)] = np.reshape(g_res, (n, g.nfeat))
             current += g.nfeat
         return result
