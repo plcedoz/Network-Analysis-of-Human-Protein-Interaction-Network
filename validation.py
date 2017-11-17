@@ -51,18 +51,18 @@ def compare_gene_lists(gene_query, gene_rank, gene_ref):
     #Proportion of indispensable vs neutral vs dispensables in the ref_gene_list
 
 
-def compare_feature_distribution(feature, reference_genes, output_file):
-    sample_genes, sample_scores, string_to_symbol = get_query_and_rank(feature, node_names, index=0)
+def compare_feature_distribution(feature, reference_genes, node_names, output_file):
+    sample_genes, sample_scores, string_to_symbol = get_query_and_rank(feature.reshape((feature.shape[0],1)), node_names, index=0)
     index = {gene:i for i,gene in enumerate(sample_genes)}
     all_scores = [feature[index[gene]] for gene in sample_genes if gene in index]
     ref_scores = [feature[index[gene]] for gene in reference_genes if gene in index]
 
     bins = np.linspace(np.min(feature), np.max(feature), 100)
-    fig = plt.figure()
-    fig.hist(all_scores, bins, alpha=0.5, label='all', normed=True)
-    fig.hist(ref_scores, bins, alpha=0.5, label='ref', normed=True)
-    fig.legend()
-    fig.savefig(output_file)
-    plt.close(fig)
+#     fig, ax = plt.subplots( nrows=1, ncols=1 )
+    plt.hist(all_scores, bins, alpha=0.5, label='all', normed=True)
+    plt.hist(ref_scores, bins, alpha=0.5, label='ref', normed=True)
+    plt.legend()
+    plt.savefig(output_file)
+    plt.close()
 
     return ss.mannwhitneyu(all_scores, ref_scores)

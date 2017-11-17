@@ -9,7 +9,7 @@ class Pipeline:
         self.generator_names = [g.get_name() for g in self.generators]
         self.nfeat = sum([g.nfeat for g in self.generators])
 
-    def get_generator_names():
+    def get_generator_names(self):
         return self.generator_names
 
     def apply(self,Graph,verbose = False):
