@@ -38,35 +38,7 @@ def get_query_and_rank(features, node_names, index=0, mapping_file="validation_d
     return gene_query, gene_rank, string_to_symbol
 
 
-def compare_gene_lists(gene_query, gene_rank, gene_ref):
-
-    """
-    k: Intersection with gene_ref within the cluster
-    M: Size of the gene query
-    n: Intersection with gene_ref in total
-    N: Size of the cluster
-    """
-    N = 100
-    k = len(list(set(gene_query[0:N]) & set(gene_ref)))
-    M = len(gene_query)
-    n = len(list(set(gene_query) & set(gene_ref)))
-    
-    print(N,n,M,m)
-    p_value = hypergeom.sf(k, M, n, N, loc=0)
-    return p_value
-
-    #N = len(gene_query)
-    #n = 100
-    #M = len(list(set(gene_query) & set(gene_ref)))
-    #m = len(list(set(gene_query[0:n]) & set(gene_ref)))
-    #print("""#elements in gene_query : \t\t\t{} (cutoff after {})
-#elements from gene_ref in gene_query : \t{} ({}%)
-#elements from gene_ref in gene_query[0:{}] : \t{} ({}%)""".format(N,n,M, int((100*M)/N),n,m, int((100*m)/n)))
-    #print(m,N,M,n)
-    #return ss.hypergeom.sf(m,N,M,n)
-
-
-def compare_feature_distribution(feature, reference_genes, node_names, output_file,title="Feature distribution"):
+def compare_feature_distribution_mannwhitney(feature, reference_genes, node_names, output_file, title="Feature distribution"):
     sample_genes, sample_scores, string_to_symbol = get_query_and_rank(feature.reshape((feature.shape[0],1)), node_names, index=0)
     index = {gene:i for i,gene in enumerate(sample_genes)}
     all_scores = [feature[index[gene]] for gene in sample_genes if gene in index]
@@ -83,7 +55,17 @@ def compare_feature_distribution(feature, reference_genes, node_names, output_fi
 
     return ss.mannwhitneyu(all_scores, ref_scores)
 
-def compare_feature_distribution_hypergeom(feature, reference_genes, node_names):
-    sample_genes, sample_scores, string_to_symbol = get_query_and_rank(feature.reshape((feature.shape[0],1)), node_names, index=0)
+def compare_feature_distribution_hypergeom(feature, reference_genes, node_names,N=100):
+    """
+        k: Intersection with gene_ref within the cluster
+        M: Size of the gene query
+        n: Intersection with gene_ref in total
+        N: Size of the cluster
+    """
 
-    return compare_gene_lists(sample_genes,sample_scores,reference_genes)
+    sample_genes, sample_scores, string_to_symbol = get_query_and_rank(feature.reshape((feature.shape[0],1)), node_names, index=0)
+    k = len(list(set(sample_genes[0:N]) & set(reference_genes)))
+    M = len(sample_genes)
+    n = len(list(set(sample_genes) & set(reference_genes)))
+    p_value = hypergeom.sf(k, M, n, N, loc=0)
+    return p_value

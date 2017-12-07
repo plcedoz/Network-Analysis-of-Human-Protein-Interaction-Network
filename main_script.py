@@ -6,7 +6,7 @@ import networkx as nx
 from read_graph import read_graph
 from common.pipeline import Pipeline
 from common.feature_generators import ExpectedDegree, ClusteringCoefficient, Degree,ClosenessCentrality,BetweennessCentrality,HITS,PageRank
-from validation import get_query_and_rank, compare_feature_distribution, compare_gene_lists,compare_feature_distribution_hypergeom
+from validation import get_query_and_rank, compare_feature_distribution_mannwhitney, compare_gene_lists,compare_feature_distribution_hypergeom
 from validation_import import get_gene_ref
 
 # Loading PPI graph
@@ -67,12 +67,10 @@ gene_sets_directories = [
 for source in ['cancer','drugbank','mendelian']:
     print(source)
     gene_ref = get_gene_ref(source=source)
-
-    compare_gene_lists(gene_query, gene_rank, gene_ref)
     for i, feat in enumerate(pipeline.get_generator_names()):
         print("Comparing reference and whole sample on: [{}]".format(feat))
         print('\t',
-              compare_feature_distribution(features[:, i], gene_ref, node_names, feat + '_distribution_comparison_{}.png'.format(source),title = "{}, {}".format(feat,source)))
+              compare_feature_distribution_mannwhitney(features[:, i], gene_ref, node_names, feat + '_distribution_comparison_{}.png'.format(source), title ="{}, {}".format(feat, source)))
         print("Hypergeom test on: [{}]".format(feat))
         print('\t',
               compare_feature_distribution_hypergeom(features[:, i], gene_ref, node_names))
