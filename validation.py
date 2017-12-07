@@ -39,17 +39,31 @@ def get_query_and_rank(features, node_names, index=0, mapping_file="validation_d
 
 
 def compare_gene_lists(gene_query, gene_rank, gene_ref):
-    N = len(gene_query)
-    n = 100
-    M = len(list(set(gene_query) & set(gene_ref)))
-    m = len(list(set(gene_query[0:n]) & set(gene_ref)))
-    print("""#elements in gene_query : \t\t\t{} (cutoff after {})
+
+    """
+    k: Intersection with gene_ref within the cluster
+    M: Size of the gene query
+    n: Intersection with gene_ref in total
+    N: Size of the cluster
+    """
+    N = 100
+    k = len(list(set(gene_query[0:N]) & set(gene_ref)))
+    M = len(gene_query)
+    n = len(list(set(gene_query) & set(gene_ref)))
+    
+    print(N,n,M,m)
+    p_value = hypergeom.sf(k, M, n, N, loc=0)
+    return p_value
+
+    #N = len(gene_query)
+    #n = 100
+    #M = len(list(set(gene_query) & set(gene_ref)))
+    #m = len(list(set(gene_query[0:n]) & set(gene_ref)))
+    #print("""#elements in gene_query : \t\t\t{} (cutoff after {})
 #elements from gene_ref in gene_query : \t{} ({}%)
 #elements from gene_ref in gene_query[0:{}] : \t{} ({}%)""".format(N,n,M, int((100*M)/N),n,m, int((100*m)/n)))
-    print(m,N,M,n)
-    return ss.hypergeom.sf(m,N,M,n)
-    #hypergeometric test?
-    #Proportion of indispensable vs neutral vs dispensables in the ref_gene_list
+    #print(m,N,M,n)
+    #return ss.hypergeom.sf(m,N,M,n)
 
 
 def compare_feature_distribution(feature, reference_genes, node_names, output_file,title="Feature distribution"):
