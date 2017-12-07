@@ -5,8 +5,8 @@ import networkx as nx
 
 from read_graph import read_graph
 from common.pipeline import Pipeline
-from common.feature_generators import ExpectedDegree, ClusteringCoefficient, Degree,ClosenessCentrality,BetweennessCentrality,HITS,PageRank
-from validation import get_query_and_rank, compare_feature_distribution_mannwhitney, compare_gene_lists,compare_feature_distribution_hypergeom
+from common.feature_generators import ExpectedDegree, ClusteringCoefficient, Degree,ClosenessCentrality,BetweennessCentrality,HITS,PageRank,Log10Wrapper
+from validation import get_query_and_rank, compare_feature_distribution_mannwhitney, compare_feature_distribution_hypergeom
 from validation_import import get_gene_ref
 
 # Loading PPI graph
@@ -25,7 +25,7 @@ print("\n######### Computing/retrieving node features #########")
 
 # The pipeline object takes as an argument the sequence of features we want
 pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
-                    ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),ClosenessCentrality(),BetweennessCentrality(),HITS(),PageRank())
+                    ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),ClosenessCentrality(),BetweennessCentrality(),HITS(),PageRank(),Log10Wrapper(Degree())())
 features = pipeline.apply(Graph, verbose=True)
 
 #########################

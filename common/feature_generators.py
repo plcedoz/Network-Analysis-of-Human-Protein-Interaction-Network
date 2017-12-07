@@ -213,3 +213,25 @@ class HITS(FeatureGenerator):
             result[i,0] = hubs[i]
             result[i,1]=authorities[i]
         return result
+
+
+def Log10Wrapper(FeatureObject):
+    class Log10(FeatureGenerator):
+        """
+        Log10 of a feature
+        """
+
+        def __init__(self, default_recomputing=False, default_dump=True, prefix=''):
+            super(Log10,self).__init__(default_recomputing=default_recomputing, default_dump=default_dump,
+                                           prefix=prefix)
+            self.nfeat = FeatureObject.nfeat
+
+        def get_name(self):
+            return "log10-"+FeatureObject.get_name()
+
+        def compute(self,Graph):
+            result_local  = FeatureObject.apply(Graph)
+            return np.log10(result_local)
+    return Log10
+
+
