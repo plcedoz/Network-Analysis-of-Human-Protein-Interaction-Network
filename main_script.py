@@ -5,8 +5,8 @@ import networkx as nx
 
 from read_graph import read_graph
 from common.pipeline import Pipeline
-from common.feature_generators import ExpectedDegree, ClusteringCoefficient, Degree
-from validation import get_query_and_rank, compare_feature_distribution, compare_gene_lists
+from common.feature_generators import ExpectedDegree, ClusteringCoefficient, Degree,ClosenessCentrality,BetweennessCentrality
+from validation import get_query_and_rank, compare_feature_distribution, compare_gene_lists,compare_feature_distribution_hypergeom
 from validation_import import get_gene_ref
 
 # Loading PPI graph
@@ -25,7 +25,7 @@ print("\n######### Computing/retrieving node features #########")
 
 # The pipeline object takes as an argument the sequence of features we want
 pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
-                    ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient())
+                    ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),ClosenessCentrality(),BetweennessCentrality())
 features = pipeline.apply(Graph, verbose=True)
 
 #########################
@@ -64,11 +64,18 @@ gene_sets_directories = [
 
 # Extract relevant gene lists
 
-gene_ref = get_gene_ref(source="cancer")
+for source in ['cancer','drugbank','mendelian']:
+    print(source)
+    gene_ref = get_gene_ref(source=source)
 
-compare_gene_lists(gene_query, gene_rank, gene_ref)
-for i, feat in enumerate(pipeline.get_generator_names()):
-    print("Comparing reference and whole sample on: [{}]".format(feat))
-    print('\t',
-          compare_feature_distribution(features[:, i], gene_ref, node_names, feat + '_distribution_comparison.png'))
-print("############\n")
+    compare_gene_lists(gene_query, gene_rank, gene_ref)
+    for i, feat in enumerate(pipeline.get_generator_names()):
+        print("Comparing reference and whole sample on: [{}]".format(feat))
+        print('\t',
+              compare_feature_distribution(features[:, i], gene_ref, node_names, feat + '_distribution_comparison_{}.png'.format(source),title = "{}, {}".format(feat,source)))
+        print("Hypergeom test on: [{}]".format(feat))
+        print('\t',
+              compare_feature_distribution_hypergeom(features[:, i], gene_ref, node_names))
+    print("############\n")
+
+

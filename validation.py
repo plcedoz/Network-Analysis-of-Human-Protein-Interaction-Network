@@ -46,12 +46,13 @@ def compare_gene_lists(gene_query, gene_rank, gene_ref):
     print("""#elements in gene_query : \t\t\t{} (cutoff after {})
 #elements from gene_ref in gene_query : \t{} ({}%)
 #elements from gene_ref in gene_query[0:{}] : \t{} ({}%)""".format(N,n,M, int((100*M)/N),n,m, int((100*m)/n)))
-    pass
+    print(m,N,M,n)
+    return ss.hypergeom.sf(m,N,M,n)
     #hypergeometric test?
     #Proportion of indispensable vs neutral vs dispensables in the ref_gene_list
 
 
-def compare_feature_distribution(feature, reference_genes, node_names, output_file):
+def compare_feature_distribution(feature, reference_genes, node_names, output_file,title="Feature distribution"):
     sample_genes, sample_scores, string_to_symbol = get_query_and_rank(feature.reshape((feature.shape[0],1)), node_names, index=0)
     index = {gene:i for i,gene in enumerate(sample_genes)}
     all_scores = [feature[index[gene]] for gene in sample_genes if gene in index]
@@ -61,8 +62,14 @@ def compare_feature_distribution(feature, reference_genes, node_names, output_fi
 #     fig, ax = plt.subplots( nrows=1, ncols=1 )
     plt.hist(all_scores, bins, alpha=0.5, label='all', normed=True)
     plt.hist(ref_scores, bins, alpha=0.5, label='ref', normed=True)
+    plt.title(title)
     plt.legend()
     plt.savefig(output_file)
     plt.close()
 
     return ss.mannwhitneyu(all_scores, ref_scores)
+
+def compare_feature_distribution_hypergeom(feature, reference_genes, node_names):
+    sample_genes, sample_scores, string_to_symbol = get_query_and_rank(feature.reshape((feature.shape[0],1)), node_names, index=0)
+
+    return compare_gene_lists(sample_genes,sample_scores,reference_genes)
