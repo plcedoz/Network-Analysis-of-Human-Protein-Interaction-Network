@@ -122,6 +122,7 @@ class PageRank(FeatureGenerator):
 
     def compute(self, Graph):
         n = Graph.number_of_nodes()
+        print("Computing Pagerank")
         result = np.zeros((n, self.nfeat))
         pr = nx.algorithms.pagerank(Graph)
         for i, p in pr.items():
