@@ -83,7 +83,7 @@ for source in ['cancer', 'drugbank', 'mendelian']:
         print("Comparing reference and whole sample on: [{}]".format(feat))
         print('\t',
               compare_feature_distribution_mannwhitney(features[:, i], gene_ref, node_names,
-                                                       feat + '_distribution_comparison_{}.png'.format(source),
+                                                       'output/' + feat + '_distribution_comparison_{}.png'.format(source),
                                                        title="{}, {}".format(feat, source)))
         print("Hypergeom test on: [{}]".format(feat))
         print('\t',

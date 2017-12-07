@@ -55,7 +55,7 @@ def compare_feature_distribution_mannwhitney(feature, reference_genes, node_name
 
     return ss.mannwhitneyu(all_scores, ref_scores)
 
-def compare_feature_distribution_hypergeom(feature, reference_genes, node_names,N=100):
+def compare_feature_distribution_hypergeom(feature, reference_genes, node_names, N=100):
     """
         k: Intersection with gene_ref within the cluster
         M: Size of the gene query
