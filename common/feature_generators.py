@@ -188,3 +188,27 @@ class ClosenessCentrality(FeatureGenerator):
         for i,c in cc.items():
             result[i] = c
         return result
+
+
+class HITS(FeatureGenerator):
+    '''
+    HITS score of every node in the graph (can be quite heavy to compute)
+    '''
+
+    def __init__(self, default_recomputing=False, default_dump=True, prefix=''):
+        super(HITS, self).__init__(default_recomputing=default_recomputing, default_dump=default_dump,
+                                       prefix=prefix)
+        self.nfeat = 2
+
+    def get_name(self):
+        return "hits"
+
+    def compute(self, Graph):
+        n = Graph.number_of_nodes()
+        result = np.zeros((n, self.nfeat))
+        print("Computing HITS...")
+        hubs,authorities = nx.algorithms.hits(Graph)
+        for i in hubs.keys():
+            result[i,0] = hubs[i]
+            result[i,1]=authorities[i]
+        return result
