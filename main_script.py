@@ -41,7 +41,7 @@ pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
 features = pipeline.apply(Graph, verbose=True)
 
 #########################
-# Learning
+# Class prediction
 #########################
 
 print("\n######### get_query_and_rank() #########")
@@ -49,10 +49,10 @@ print("\n######### get_query_and_rank() #########")
 gene_query, gene_rank, string_to_symbol = get_query_and_rank(features, node_names, index=0)
 
 #########################
-# Validation
+# Features Correlation
 #########################
 
-print("\n######### Validation #########")
+print("\n######### Features Correlation #########")
 
 # Perform gene set enrichment analysis (GSEA) on a variety of gene sets directories
 gene_sets_directories = [
