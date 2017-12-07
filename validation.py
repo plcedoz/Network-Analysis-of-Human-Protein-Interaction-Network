@@ -35,14 +35,15 @@ def get_query_and_rank(features, node_names, index=0, mapping_file="validation_d
 
 
 def compare_gene_lists(gene_query, gene_rank, gene_ref):
+
+    N = 100
+    k = len(list(set(gene_query[0:N]) & set(gene_ref)))
+    M = len(gene_query)
+    n = len(list(set(gene_query) & set(gene_ref)))
     
-    N = len(gene_query)
-    n = 100
-    M = len(list(set(gene_query) & set(gene_ref)))
-    m = len(list(set(gene_query[0:n]) & set(gene_ref)))
     print(N,n,M,m)
-    
-    pass
+    p_value = hypergeom.sf(k, M, n, N, loc=0)
+    return p_value
     #hypergeometric test?
     #Proportion of indispensable vs neutral vs dispensables in the ref_gene_list
     
