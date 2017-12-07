@@ -235,3 +235,28 @@ def Log10Wrapper(FeatureObject):
     return Log10
 
 
+def NormalizeWrapper(FeatureObject):
+    class Normalized(FeatureGenerator):
+        """
+        Log10 of a feature
+        """
+
+        def __init__(self, default_recomputing=False, default_dump=True, prefix=''):
+            super(Normalized,self).__init__(default_recomputing=default_recomputing, default_dump=default_dump,
+                                           prefix=prefix)
+            self.nfeat = FeatureObject.nfeat
+            self.mean=None
+            self.sd=None
+
+        def get_name(self):
+            return "normalized-"+FeatureObject.get_name()
+
+        def compute(self,Graph):
+            result_local  = FeatureObject.apply(Graph)
+            self.mean = np.mean(result_local,axis=0)
+            result_local = result_local - self.mean
+            self.sd = np.std(result_local,axis = 0)
+            result_local = result_local/self.sd
+            return result_local
+    return Normalized
+
