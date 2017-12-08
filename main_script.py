@@ -15,6 +15,7 @@ from common.feature_generators import PageRank
 from common.feature_generators import Log10Wrapper
 from common.feature_generators import NormalizeWrapper
 from common.feature_generators import NeighbouringConductance
+from common.feature_generators import FeatureSelector
 from validation import compute_correlations
 from prediction import get_labels, train_model, get_metrics
 
@@ -36,8 +37,8 @@ print("\n######### Computing/retrieving node features #########")
 # The pipeline object takes as an argument the sequence of features we want
 pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
                     ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),
-                    ClosenessCentrality(), BetweennessCentrality(), HITS(), PageRank(), Log10Wrapper(Degree())(),
-                    NormalizeWrapper(Degree())(),NeighbouringConductance(range=2))
+                    ClosenessCentrality(), BetweennessCentrality(), FeatureSelector(HITS())(), PageRank(), Log10Wrapper(Degree())(),
+                    NormalizeWrapper(Degree())())#,NeighbouringConductance(range=2))
 features, node_names = pipeline.apply(Graph, verbose=True)
 
 #########################

@@ -287,3 +287,38 @@ def NormalizeWrapper(FeatureObject):
             return result_local
     return Normalized
 
+def FeatureSelector(FeatureObject):
+    class Selected(FeatureGenerator):
+        """
+        Select a list of columns
+        """
+
+        def __init__(self, columns = None,default_recomputing=False, default_dump=True, prefix=''):
+            super(Selected,self).__init__(default_recomputing=default_recomputing, default_dump=default_dump,
+                                           prefix=prefix)
+            if columns is None:
+                self.columns = list()
+                self.nfeat = FeatureObject.nfeat
+            else:
+                if isinstance(columns,int):
+                    self.columns = [columns]
+                else:
+                    self.columns = columns
+                self.nfeat = len(self.columns)
+
+
+
+        def get_name(self):
+            return "selected{}-".format("-".join(list(map(str,self.columns))))+FeatureObject.get_name()
+
+        def compute(self,Graph):
+
+            result_origin  = FeatureObject.apply(Graph)
+            if len(self.columns)==0:
+                result_local = result_origin
+            else:
+                result_local = np.zeros((result_origin.shape[0],self.nfeat))
+                for i,col in enumerate(self.columns):
+                    result_local[i,:]=  result_origin[col,:]
+            return result_local
+    return Selected
