@@ -3,10 +3,11 @@ import pandas as pd
 import gseapy as gp
 import math
 import matplotlib.pyplot as plt
-
 import scipy.stats as ss
 
 from scipy.stats import hypergeom
+from validation_import import get_ref_genes
+
 
 def get_genes_scores(features, feature_name, ref_genes):
     
@@ -29,8 +30,8 @@ def compare_feature_distribution_mannwhitney(features, feature_name, ref_genes, 
     plt.legend()
     plt.savefig(output_file)
     plt.close()
-
-    return ss.mannwhitneyu(sample_scores, ref_scores)
+    pvalue = ss.mannwhitneyu(sample_scores, ref_scores).pvalue
+    return pvalue
 
 def compare_feature_distribution_hypergeom(features, feature_name, ref_genes, N=100):
     """
@@ -44,5 +45,34 @@ def compare_feature_distribution_hypergeom(features, feature_name, ref_genes, N=
     k = len(list(set(sample_genes[0:N]) & set(ref_genes)))
     M = len(sample_genes)
     n = len(list(set(sample_genes) & set(ref_genes)))
-    p_value = hypergeom.sf(k, M, n, N, loc=0)
-    return p_value
+    pvalue = hypergeom.sf(k, M, n, N, loc=0)
+    return pvalue
+
+
+def compute_correlations(features):
+
+    print ("Computing correlations/pvalues for all features for different sources\n")
+    feature_names = list(features.columns)
+    pvalues = pd.DataFrame(data=np.zeros((6,len(feature_names))), index=["cancer_Mann–Whitney", "drugbank_Mann–Whitney",
+                                                                         "mendelian_Mann–Whitney", "cancer_hypergeom",
+                                                                         "drugbank_hypergeom", "mendelian_hypergeom"],
+                           columns = feature_names)
+    for source in ['cancer', 'drugbank', 'mendelian']:
+        print("Source = %s"%source)
+        ref_genes = get_ref_genes(source=source)
+        for feature_name in feature_names:
+            pvalue_MW = compare_feature_distribution_mannwhitney(features, feature_name, ref_genes, 'output/' + feature_name +
+                                                                 '_distribution_comparison_{}.png'.format(source),
+                                                                 title="{},{}".format(feature_name, source))
+            pvalue_hypergeom = compare_feature_distribution_hypergeom(features, feature_name, ref_genes)
+            pvalues.loc["%s_Mann–Whitney"%source:,feature_name] = pvalue_MW
+            pvalues.loc["%s_hypergeom"%source:,feature_name] = pvalue_hypergeom
+            print ("pvalue Mann-Whitney = %.2g \t pvalue hypergeometric = %.2g \t(%s)"%(pvalue_MW, pvalue_hypergeom,
+                                                                                        feature_name))
+        print("############\n")
+    print ("Saving pvalues to output/pvalues")
+    pvalues.to_pickle("output/pvalues")
+    
+    return pvalues
+
+

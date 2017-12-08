@@ -14,9 +14,7 @@ from common.feature_generators import HITS
 from common.feature_generators import PageRank
 from common.feature_generators import Log10Wrapper
 from common.feature_generators import NormalizeWrapper
-from validation import compare_feature_distribution_mannwhitney
-from validation import compare_feature_distribution_hypergeom
-from validation_import import get_ref_genes
+from validation import compute_correlations
 
 # Loading PPI graph
 print("\n######### Loading Graph #########")
@@ -51,6 +49,8 @@ features = pipeline.apply(Graph, verbose=True)
 
 print("\n######### Features Correlation #########")
 
+pvalues = compute_correlations(features)
+
 # Perform gene set enrichment analysis (GSEA) on a variety of gene sets directories
 gene_sets_directories = [
     u'Cancer_Cell_Line_Encyclopedia',
@@ -71,18 +71,3 @@ gene_sets_directories = [
 # enrichr = enrichr_validation(gene_query, gene_rank=None, outdir="validation_results", gene_sets='KEGG_2016')
 # prerank = prerank_validation(gene_query, gene_rank, outdir="validation_results", gene_sets='KEGG_2016')
 
-# Extract relevant gene lists
-
-for source in ['cancer', 'drugbank', 'mendelian']:
-    print(source)
-    ref_genes = get_ref_genes(source=source)
-    for feature_name in pipeline.get_generator_names():
-        print("Comparing reference and whole sample on: [{}]".format(feature_name))
-        print('\t',
-              compare_feature_distribution_mannwhitney(features, feature_name, ref_genes,
-                                                       'output/' + feature_name + '_distribution_comparison_{}.png'.format(source),
-                                                       title="{}, {}".format(feature_name, source)))
-        print("Hypergeom test on: [{}]".format(feature_name))
-        print('\t',
-              compare_feature_distribution_hypergeom(features, feature_name, ref_genes))
-    print("############\n")
