@@ -16,10 +16,12 @@ from common.feature_generators import Log10Wrapper
 from common.feature_generators import NormalizeWrapper
 from common.feature_generators import NeighbouringConductance
 from validation import compute_correlations
+from prediction import get_labels, train_model, get_metrics
+
 
 # Loading PPI graph
 print("\n######### Loading Graph #########")
-Graph, node_names = read_graph(directed=False)
+Graph = read_graph(directed=False)
 print("Loaded graph:\n\t{} nodes\n\t{} edges".format(
     Graph.number_of_nodes(),
     Graph.number_of_edges()
@@ -36,13 +38,20 @@ pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
                     ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),
                     ClosenessCentrality(), BetweennessCentrality(), HITS(), PageRank(), Log10Wrapper(Degree())(),
                     NormalizeWrapper(Degree())(),NeighbouringConductance(range=2))
-features = pipeline.apply(Graph, verbose=True)
+features, node_names = pipeline.apply(Graph, verbose=True)
 
 #########################
 # Class prediction
 #########################
 
+print("\n######### Class Prediction #########")
 
+sources = ["mendelian", "cancer", "drugbank"]
+
+for source in sources:
+    labels = get_labels(node_names)
+    y_test, y_pred, y_score = train_model(features, labels, source)
+    get_metrics(y_test, y_pred, y_score, source)
 
 #########################
 # Features Correlation
@@ -50,7 +59,7 @@ features = pipeline.apply(Graph, verbose=True)
 
 print("\n######### Features Correlation #########")
 
-pvalues = compute_correlations(features)
+pvalues = compute_correlations(features, sources)
 
 # Perform gene set enrichment analysis (GSEA) on a variety of gene sets directories
 gene_sets_directories = [
