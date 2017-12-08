@@ -239,13 +239,16 @@ class NeighbouringConductance(FeatureGenerator):
             neighs = set()
             new_neighs = set()
             new_neighs.add(node)
-
             for _ in range(self.range):
-                neighs= neighs.union(new_neighs)
+                neighs = neighs.union(new_neighs)
+                next_neighs = set()
                 for neigh in new_neighs:
-                    new_neighs = new_neighs.union(set(Graph[neigh].keys()))
-                new_neighs=  new_neighs.difference(neighs)
-            result[node] = nx.algorithms.cuts.conductance(Graph,neighs)
+                    next_neighs = next_neighs.union(set(Graph[neigh].keys()))
+                new_neighs =  next_neighs.difference(neighs)
+            if Graph.degree(node) == 0:
+                result[node] = np.nan
+            else:
+                result[node] = nx.algorithms.cuts.conductance(Graph,neighs)
         return result
 
 
