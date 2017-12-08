@@ -211,7 +211,7 @@ class HITS(FeatureGenerator):
         hubs,authorities = nx.algorithms.hits(Graph)
         for i in hubs.keys():
             result[i,0] = hubs[i]
-            result[i,1]=authorities[i]
+            result[i,1] = authorities[i]
         return result
 
 
