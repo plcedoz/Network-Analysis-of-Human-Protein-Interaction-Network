@@ -10,9 +10,13 @@ class FeatureGenerator(object):
         self.default_recomputing = default_recomputing
         self.prefix = prefix
         self.default_dump = default_dump
+        self.nfeat=None
 
     def get_name(self):
         pass
+
+    def get_feature_names(self):
+        return [self.get_name()+str(i) for i in range(self.nfeat)]
 
     def compute(self):
         pass
@@ -204,6 +208,9 @@ class HITS(FeatureGenerator):
     def get_name(self):
         return "hits"
 
+    def get_feature_names(self):
+        return ["hits_hubs","hits_authorities"]
+
     def compute(self, Graph):
         n = Graph.number_of_nodes()
         result = np.zeros((n, self.nfeat))
@@ -256,6 +263,9 @@ def Log10Wrapper(FeatureObject):
         def get_name(self):
             return "log10-"+FeatureObject.get_name()
 
+        def get_feature_names(self):
+            return ["log10-"+ x for x in FeatureObject.get_feature_names()]
+
         def compute(self,Graph):
             result_local  = FeatureObject.apply(Graph)
             return np.log10(result_local)
@@ -278,6 +288,9 @@ def NormalizeWrapper(FeatureObject):
         def get_name(self):
             return "normalized-"+FeatureObject.get_name()
 
+        def get_feature_names(self):
+            return ["normalized-" + x for x in FeatureObject.get_feature_names()]
+
         def compute(self,Graph):
             result_local  = FeatureObject.apply(Graph)
             self.mean = np.mean(result_local,axis=0)
@@ -297,28 +310,25 @@ def FeatureSelector(FeatureObject):
             super(Selected,self).__init__(default_recomputing=default_recomputing, default_dump=default_dump,
                                            prefix=prefix)
             if columns is None:
-                self.columns = list()
-                self.nfeat = FeatureObject.nfeat
+                self.columns = list(range(FeatureObject.nfeat))
             else:
                 if isinstance(columns,int):
                     self.columns = [columns]
                 else:
                     self.columns = columns
-                self.nfeat = len(self.columns)
-
-
+            self.nfeat = len(self.columns)
 
         def get_name(self):
             return "selected{}-".format("-".join(list(map(str,self.columns))))+FeatureObject.get_name()
 
-        def compute(self,Graph):
+        def get_feature_names(self):
+            original_feature_names = FeatureObject.get_feature_names()
+            return [original_feature_names[col] for col in self.columns]
 
+        def compute(self,Graph):
             result_origin  = FeatureObject.apply(Graph)
-            if len(self.columns)==0:
-                result_local = result_origin
-            else:
-                result_local = np.zeros((result_origin.shape[0],self.nfeat))
-                for i,col in enumerate(self.columns):
-                    result_local[i,:]=  result_origin[col,:]
+            result_local = np.zeros((result_origin.shape[0],self.nfeat))
+            for i,col in enumerate(self.columns):
+                result_local[:,i]=  result_origin[:,col]
             return result_local
     return Selected

@@ -9,12 +9,8 @@ class Pipeline:
         self.generators = featGenList
         self.generator_names = []
         for g in self.generators:
-            if g.get_name()[-4:] == "hits":
-                self.generator_names.append(g.get_name() + "_hubs")
-                self.generator_names.append(g.get_name() + "_authorities")
-            else:
-                self.generator_names.append(g.get_name())
-        self.nfeat = sum([g.nfeat for g in self.generators])
+            self.generator_names.extend(g.get_feature_names())
+        self.nfeat = int(sum([g.nfeat for g in self.generators]))
 
     def get_generator_names(self):
         return self.generator_names
