@@ -2,7 +2,7 @@ from tqdm import tqdm
 import networkx as nx
 
 
-def read_graph(file_name = "data/9606.protein.links.v10.5.paj",directed = True):
+def read_graph(file_name = "data/9606.protein.links.v10.5.paj",directed = True, threshold = None):
     if directed:
         G = nx.DiGraph()
     else:
@@ -24,7 +24,8 @@ def read_graph(file_name = "data/9606.protein.links.v10.5.paj",directed = True):
         print("Reading Edges list")
         for line in f:
             start_node, end_node,wght = line.strip().split()
-            G.add_edge(int(start_node),int(end_node),weight = float(wght))
+            if threshold is None or float(wght) > threshold:
+                G.add_edge(int(start_node),int(end_node),weight = float(wght))
         f.close()  # with open(...) does it already
 
     return G
