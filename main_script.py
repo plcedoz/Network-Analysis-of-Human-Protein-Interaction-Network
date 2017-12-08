@@ -18,7 +18,7 @@ from validation import compute_correlations
 
 # Loading PPI graph
 print("\n######### Loading Graph #########")
-Graph, node_names = read_graph(directed=False)
+Graph = read_graph(directed=False)
 print("Loaded graph:\n\t{} nodes\n\t{} edges".format(
     Graph.number_of_nodes(),
     Graph.number_of_edges()
@@ -35,7 +35,7 @@ pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
                     ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),
                     ClosenessCentrality(), BetweennessCentrality(), HITS(), PageRank(), Log10Wrapper(Degree())(),
                     NormalizeWrapper(Degree())(),NormalizeWrapper(HITS())())
-features = pipeline.apply(Graph, verbose=True)
+features, node_names = pipeline.apply(Graph, verbose=True)
 
 #########################
 # Class prediction

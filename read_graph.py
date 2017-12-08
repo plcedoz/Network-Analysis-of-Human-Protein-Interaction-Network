@@ -27,4 +27,4 @@ def read_graph(file_name = "data/9606.protein.links.v10.5.paj",directed = True):
             G.add_edge(int(start_node),int(end_node),weight = float(wght))
         f.close()  # with open(...) does it already
 
-    return G,nodes_names
+    return G

@@ -30,8 +30,8 @@ class Pipeline:
                 print(g.get_name())
             features.iloc[:,current:(current+g.nfeat)] = np.reshape(g_res, (n, g.nfeat))
             current += g.nfeat
-        features = filter_genes(features)
-        return features
+        features, node_names = filter_genes(features)
+        return features, node_names
 
     
 def filter_genes(features, mapping_file="validation_datasets/entrez_to_ENSP_to_symbols.csv"):    
@@ -40,9 +40,11 @@ def filter_genes(features, mapping_file="validation_datasets/entrez_to_ENSP_to_s
     string_to_symbol = {}
     for i in range(len(mapping)):
         string_to_symbol[str(mapping.iloc[i,2])] = str(mapping.iloc[i,3])
-    new_indices = [gene for gene in features.index.values if gene in list(string_to_symbol.keys())]
-    features = features.loc[new_indices,:]
+    indices = [gene for gene in features.index.values if gene in list(string_to_symbol.keys())]
+    features = features.loc[indices,:]
     features = features.rename(index=string_to_symbol)
-    return features
+    node_names = list(features.index)
+    
+    return features, node_names
     
     
