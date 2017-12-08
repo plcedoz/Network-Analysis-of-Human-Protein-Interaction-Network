@@ -64,7 +64,7 @@ def get_drugbank(molecule_type="target", subset="all"):
     return data
 
 
-def get_gene_ref(source="cancer", molecule_type="target", subset="all"):
+def get_ref_genes(source="cancer", molecule_type="target", subset="all"):
     
     if source=="cancer":
         gene_ref = get_cancer()["gene_symbols"]

@@ -14,10 +14,9 @@ from common.feature_generators import HITS
 from common.feature_generators import PageRank
 from common.feature_generators import Log10Wrapper
 from common.feature_generators import NormalizeWrapper
-from validation import get_query_and_rank
 from validation import compare_feature_distribution_mannwhitney
 from validation import compare_feature_distribution_hypergeom
-from validation_import import get_gene_ref
+from validation_import import get_ref_genes
 
 # Loading PPI graph
 print("\n######### Loading Graph #########")
@@ -44,9 +43,7 @@ features = pipeline.apply(Graph, verbose=True)
 # Class prediction
 #########################
 
-print("\n######### get_query_and_rank() #########")
 
-gene_query, gene_rank, string_to_symbol = get_query_and_rank(features, node_names, index=0)
 
 #########################
 # Features Correlation
@@ -78,14 +75,14 @@ gene_sets_directories = [
 
 for source in ['cancer', 'drugbank', 'mendelian']:
     print(source)
-    gene_ref = get_gene_ref(source=source)
-    for i, feat in enumerate(pipeline.get_generator_names()):
-        print("Comparing reference and whole sample on: [{}]".format(feat))
+    ref_genes = get_ref_genes(source=source)
+    for feature_name in pipeline.get_generator_names():
+        print("Comparing reference and whole sample on: [{}]".format(feature_name))
         print('\t',
-              compare_feature_distribution_mannwhitney(features[:, i], gene_ref, node_names,
-                                                       'output/' + feat + '_distribution_comparison_{}.png'.format(source),
-                                                       title="{}, {}".format(feat, source)))
-        print("Hypergeom test on: [{}]".format(feat))
+              compare_feature_distribution_mannwhitney(features, feature_name, ref_genes,
+                                                       'output/' + feature_name + '_distribution_comparison_{}.png'.format(source),
+                                                       title="{}, {}".format(feature_name, source)))
+        print("Hypergeom test on: [{}]".format(feature_name))
         print('\t',
-              compare_feature_distribution_hypergeom(features[:, i], gene_ref, node_names))
+              compare_feature_distribution_hypergeom(features, feature_name, ref_genes))
     print("############\n")
