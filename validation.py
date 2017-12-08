@@ -49,7 +49,7 @@ def compare_feature_distribution_hypergeom(features, feature_name, ref_genes, N=
     return pvalue
 
 
-def compute_correlations(features):
+def compute_correlations(features, sources):
 
     print ("Computing correlations/pvalues for all features for different sources\n")
     feature_names = list(features.columns)
@@ -57,7 +57,7 @@ def compute_correlations(features):
                                                                          "mendelian_Mann–Whitney", "cancer_hypergeom",
                                                                          "drugbank_hypergeom", "mendelian_hypergeom"],
                            columns = feature_names)
-    for source in ['cancer', 'drugbank', 'mendelian']:
+    for source in sources:
         print("Source = %s"%source)
         ref_genes = get_ref_genes(source=source)
         for feature_name in feature_names:
