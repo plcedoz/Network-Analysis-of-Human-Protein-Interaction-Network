@@ -37,7 +37,7 @@ print("\n######### Computing/retrieving node features #########")
 # The pipeline object takes as an argument the sequence of features we want
 pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
                     ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),
-                    ClosenessCentrality(), BetweennessCentrality(), FeatureSelector(HITS())(), PageRank(), Log10Wrapper(Degree())(),
+                    ClosenessCentrality(), BetweennessCentrality(), FeatureSelector(HITS())(columns=1), PageRank(), Log10Wrapper(Degree())(),
                     NormalizeWrapper(Degree())())#,NeighbouringConductance(range=2))
 features, node_names = pipeline.apply(Graph, verbose=True)
 
