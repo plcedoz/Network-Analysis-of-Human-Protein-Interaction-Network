@@ -14,6 +14,7 @@ from common.feature_generators import HITS
 from common.feature_generators import PageRank
 from common.feature_generators import Log10Wrapper
 from common.feature_generators import NormalizeWrapper
+from common.feature_generators import NeighbouringConductance
 from validation import compute_correlations
 
 # Loading PPI graph
@@ -34,7 +35,7 @@ print("\n######### Computing/retrieving node features #########")
 pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
                     ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),
                     ClosenessCentrality(), BetweennessCentrality(), HITS(), PageRank(), Log10Wrapper(Degree())(),
-                    NormalizeWrapper(Degree())(),NormalizeWrapper(HITS())())
+                    NormalizeWrapper(Degree())(),NeighbouringConductance(range=2))
 features = pipeline.apply(Graph, verbose=True)
 
 #########################

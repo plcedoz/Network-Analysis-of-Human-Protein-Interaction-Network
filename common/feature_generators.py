@@ -215,6 +215,33 @@ class HITS(FeatureGenerator):
         return result
 
 
+class NeighbouringConductance(FeatureGenerator):
+    def __init__(self, range = 1,default_recomputing=False, default_dump=True, prefix=''):
+        super(NeighbouringConductance, self).__init__(default_recomputing=default_recomputing, default_dump=default_dump,
+                                       prefix=prefix)
+        self.nfeat = 1
+        self.range = range
+
+    def get_name(self):
+        return "Nconductance{}".format(self.range)
+
+    def compute(self,Graph):
+        n = Graph.number_of_nodes()
+        result = np.zeros((n, self.nfeat))
+        for node in tqdm(Graph.nodes(),desc=self.get_name()):
+            neighs = set()
+            new_neighs = set()
+            new_neighs.add(node)
+
+            for _ in range(self.range):
+                neighs= neighs.union(new_neighs)
+                for neigh in new_neighs:
+                    new_neighs = new_neighs.union(set(Graph[neigh].keys()))
+                new_neighs=  new_neighs.difference(neighs)
+            result[node] = nx.algorithms.cuts.conductance(Graph,neighs)
+        return result
+
+
 def Log10Wrapper(FeatureObject):
     class Log10(FeatureGenerator):
         """
