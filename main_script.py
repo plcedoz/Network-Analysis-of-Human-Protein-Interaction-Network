@@ -16,6 +16,7 @@ from common.feature_generators import Log10Wrapper
 from common.feature_generators import NormalizeWrapper
 from common.feature_generators import NeighbouringConductance
 from common.feature_generators import FeatureSelector
+from common.feature_generators import ExternalFeature
 from validation import compute_correlations
 from prediction import get_labels, train_model, get_metrics
 
@@ -38,7 +39,8 @@ print("\n######### Computing/retrieving node features #########")
 pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
                     ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),
                     ClosenessCentrality(), BetweennessCentrality(), FeatureSelector(HITS())(columns=1), PageRank(), Log10Wrapper(Degree())(),
-                    NormalizeWrapper(Degree())())#,NeighbouringConductance(range=2))
+                    NormalizeWrapper(Degree())(),NeighbouringConductance(range=2),FeatureSelector(ExternalFeature(source_file="ppi_20.emb",name="PPINode2vec"))(columns=[0,1,2,3,4,5]))
+
 features, node_names = pipeline.apply(Graph, verbose=True)
 
 #########################

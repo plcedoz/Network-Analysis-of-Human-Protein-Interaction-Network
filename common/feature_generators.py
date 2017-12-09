@@ -4,6 +4,8 @@ import pickle
 from tqdm import tqdm
 import os
 
+EXTERNAL_FEATURE_PATH = "data/external_features/"
+
 class FeatureGenerator(object):
     def __init__(self, default_recomputing=False, default_dump=True, prefix=''):
         self.cache_filename = None
@@ -250,6 +252,37 @@ class NeighbouringConductance(FeatureGenerator):
             else:
                 result[node] = nx.algorithms.cuts.conductance(Graph,neighs)
         return result
+
+class ExternalFeature(FeatureGenerator):
+    def __init__(self, source_file = None,name = None,default_recomputing=False, default_dump=True, prefix=''):
+        super(ExternalFeature, self).__init__(default_recomputing=default_recomputing, default_dump=default_dump,
+                                       prefix=prefix)
+        with open(EXTERNAL_FEATURE_PATH +source_file,"r") as f:
+            line = f.readline()
+            self.nfeat = int(line.strip().split()[-1])
+        if name is None:
+            self.name = source_file
+        else:
+            self.name = name
+        self.source_file = source_file
+
+
+    def get_name(self):
+        return self.name
+
+    def compute(self,Graph):
+        n = Graph.number_of_nodes()
+        result = np.zeros((n, self.nfeat))
+        with open(EXTERNAL_FEATURE_PATH +self.source_file,"r") as f:
+            line = f.readline()
+            assert n == int(line.strip().split()[0])
+            for line in f:
+                line_as_list = line.strip().split()
+                node_id = int(line_as_list[0])
+                features_list = [float(line_as_list[i]) for i in range(1,self.nfeat+1)]
+                result[node_id,:] = features_list
+        return result
+
 
 
 def Log10Wrapper(FeatureObject):
