@@ -3,7 +3,9 @@ import pandas as pd
 import matplotlib
 #%matplotlib inline
 import matplotlib.pyplot as plt
+import json
 
+from time import strftime
 from validation_import import get_ref_genes
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegressionCV
@@ -39,16 +41,18 @@ def train_model(features, labels, source="mendelian"):
     y_test = labels_test[source]
     # model = LogisticRegressionCV(Cs=20, penalty='l2')
 
-    model  = GridSearchCV(n_jobs = 4,cv = 5, refit = True,estimator=RandomForestClassifier(verbose=0,class_weight ="balanced"),param_grid=
+    model = GridSearchCV(n_jobs = 4,cv = 5, refit = True,estimator=RandomForestClassifier(verbose=0,class_weight ="balanced"),param_grid=
                 {"max_depth":[2,4,6],"min_samples_split":[2,4],"max_features":["auto","log2",None],"n_estimators" :[20,50,100]})
     model.fit(X_train, y_train)
     y_score = model.predict_proba(X_test)[:,1]
     y_pred = model.predict(X_test)
+
+    model_info = dict(model_info =str(model),features = list(features.columns))
     
-    return y_test, y_pred, y_score
+    return y_test, y_pred, y_score,model_info
 
     
-def get_metrics(y_test, y_pred, y_score, source="mendelian"):
+def get_and_save_metrics(y_test, y_pred, y_score, source="mendelian",model_info = None):
 
     accuracy = accuracy_score(y_test, y_pred, normalize=True, sample_weight=None)
     avg_precision = average_precision_score(y_test, y_score)
@@ -63,7 +67,20 @@ def get_metrics(y_test, y_pred, y_score, source="mendelian"):
     print ("Recall = %0.2f"%recall)
     print ("AUC = %0.2f"%auc)
     print("Confusion Matrix:")
-    print(confusion_matrix(y_test,y_pred))
+    cm = confusion_matrix(y_test,y_pred)
+    if model_info is None:
+        dico_exportation = dict()
+    else:
+        dico_exportation = dict(pipeline_info = model_info.copy())
+    dico_exportation["cm"] = dict(zip(["tn","fp","fn","tp"],cm.ravel()))
+    dico_exportation["metrics"] = dict()
+    dico_exportation["metrics"]["F1"] = f1
+    dico_exportation["metrics"]["recall"] = avg_precision
+    dico_exportation["metrics"]["precision"] = recall
+    dico_exportation["source"] = source
+
+    with open("output/{}.json".format(strftime("%Y_%m_%d_%H_%M")), 'w') as fi:
+        json.dump(obj=dico_exportation,fp=fi, indent=2)
 
     fpr, tpr, thresholds = roc_curve(y_test, y_score)
     precision, recall, thresholds = precision_recall_curve(y_test, y_score)
@@ -79,6 +96,7 @@ def get_metrics(y_test, y_pred, y_score, source="mendelian"):
     plt.ylabel("precision")
     plt.title("PR curve %s"%source)
     plt.savefig("output/metrics_%s"%source)
+
     
     
     

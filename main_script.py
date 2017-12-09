@@ -18,7 +18,7 @@ from common.feature_generators import NeighbouringConductance
 from common.feature_generators import FeatureSelector
 from common.feature_generators import ExternalFeature
 from validation import compute_correlations
-from prediction import get_labels, train_model, get_metrics
+from prediction import get_labels, train_model, get_and_save_metrics
 
 
 # Loading PPI graph
@@ -58,8 +58,8 @@ sources = ["mendelian", "cancer", "drugbank"]
 
 for source in sources:
     labels = get_labels(node_names)
-    y_test, y_pred, y_score = train_model(features, labels, source)
-    get_metrics(y_test, y_pred, y_score, source)
+    y_test, y_pred, y_score ,model_info= train_model(features, labels, source)
+    get_and_save_metrics(y_test, y_pred, y_score, source,model_info)
 
 #########################
 # Features Correlation
