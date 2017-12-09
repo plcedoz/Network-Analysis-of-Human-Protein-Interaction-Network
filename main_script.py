@@ -44,6 +44,7 @@ pipeline = Pipeline(Log10Wrapper(Degree(default_dump=True, default_recomputing=F
                     FeatureSelector(HITS())(columns=1),
                     PageRank(),
                     NeighbouringConductance(range=2),
+                    NeighbouringConductance(range=3),
                     ExternalFeature(source_file="ppi_32dimq05.emb", name="PPINode2vec"))
 
 features, node_names = pipeline.apply(Graph, verbose=True)
