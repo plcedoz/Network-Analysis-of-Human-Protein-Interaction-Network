@@ -37,14 +37,14 @@ print("\n######### Computing/retrieving node features #########")
 
 # The pipeline object takes as an argument the sequence of feature generator objects we want
 pipeline = Pipeline(Log10Wrapper(Degree(default_dump=True, default_recomputing=False))(),
-                    Log10Wrapper(ExpectedDegree(default_dump=True, default_recomputing=False))(), 
+                    Log10Wrapper(ExpectedDegree(default_dump=True, default_recomputing=False))(),
                     ClusteringCoefficient(),
-                    ClosenessCentrality(), 
-                    BetweennessCentrality(), 
-                    FeatureSelector(HITS())(columns=1), 
+                    ClosenessCentrality(),
+                    BetweennessCentrality(),
+                    FeatureSelector(HITS())(columns=1),
                     PageRank(),
                     NeighbouringConductance(range=2),
-                    FeatureSelector(ExternalFeature(source_file="ppi_20.emb",name="PPINode2vec"))(columns=[0,1,2,3,4,5]))
+                    ExternalFeature(source_file="ppi_32dimq05.emb", name="PPINode2vec"))
 
 features, node_names = pipeline.apply(Graph, verbose=True)
 

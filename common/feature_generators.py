@@ -18,7 +18,10 @@ class FeatureGenerator(object):
         pass
 
     def get_feature_names(self):
-        return [self.get_name()+str(i) for i in range(self.nfeat)]
+        if self.nfeat==1:
+            return [self.get_name()]
+        else:
+            return [self.get_name() +"#" +str(i) for i in range(self.nfeat)]
 
     def compute(self):
         pass
