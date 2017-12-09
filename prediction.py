@@ -14,6 +14,7 @@ from sklearn.metrics import recall_score
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import confusion_matrix
 
 
 def get_labels(node_names):
@@ -55,10 +56,11 @@ def get_metrics(y_test, y_pred, y_score, source="mendelian"):
     print ("F1 score = %0.2f"%f1)
     print ("Recall = %0.2f"%recall)
     print ("AUC = %0.2f"%auc)
+    print("Confusion Matrix:")
+    print(confusion_matrix(y_test,y_pred))
 
     fpr, tpr, thresholds = roc_curve(y_test, y_score)
     precision, recall, thresholds = precision_recall_curve(y_test, y_score)
-
     plt.figure()
     plt.subplot(121)
     plt.plot(fpr, tpr)
