@@ -30,7 +30,7 @@ def get_labels(node_names):
 
 def train_model(features, labels, source="mendelian"): 
 
-    X_train, X_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.33)
+    X_train, X_test, labels_train, labels_test = train_test_split(features, stratify = labels, test_size=0.33)
     y_train = labels_train[source]
     y_test = labels_test[source]
     model = LogisticRegressionCV(Cs=20, penalty='l2')
