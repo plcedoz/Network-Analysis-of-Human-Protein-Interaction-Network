@@ -15,6 +15,9 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 from sklearn.metrics import precision_recall_curve
 
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
+
 
 def get_labels(node_names):
     
@@ -33,7 +36,9 @@ def train_model(features, labels, source="mendelian"):
     X_train, X_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.33)
     y_train = labels_train[source]
     y_test = labels_test[source]
-    model = LogisticRegressionCV(Cs=20, penalty='l2')
+    # model = LogisticRegressionCV(Cs=20, penalty='l2')
+
+    model  = GridSearchCV(n_jobs = 4,cv = 5, refit = True,estimator=RandomForestClassifier(verbose=0),param_grid={"max_depth":[2,4,6],"min_samples_split":[2,4],"max_features":["auto","log2",None],"n_estimators" :[20,50,100]})
     model.fit(X_train, y_train)
     y_score = model.predict_proba(X_test)[:,1]
     y_pred = model.predict(X_test)
