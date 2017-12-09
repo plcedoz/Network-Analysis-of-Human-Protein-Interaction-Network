@@ -36,10 +36,15 @@ print("Loaded graph:\n\t{} nodes\n\t{} edges".format(
 print("\n######### Computing/retrieving node features #########")
 
 # The pipeline object takes as an argument the sequence of features we want
-pipeline = Pipeline(Degree(default_dump=True, default_recomputing=False),
-                    ExpectedDegree(default_dump=True, default_recomputing=False), ClusteringCoefficient(),
-                    ClosenessCentrality(), BetweennessCentrality(), FeatureSelector(HITS())(columns=1), PageRank(), Log10Wrapper(Degree())(),
-                    NormalizeWrapper(Degree())(),NeighbouringConductance(range=2),FeatureSelector(ExternalFeature(source_file="ppi_20.emb",name="PPINode2vec"))(columns=[0,1,2,3,4,5]))
+pipeline = Pipeline(Log10Wrapper(Degree(default_dump=True, default_recomputing=False))(),
+                    Log10Wrapper(ExpectedDegree(default_dump=True, default_recomputing=False))(), 
+                    ClusteringCoefficient(),
+                    ClosenessCentrality(), 
+                    BetweennessCentrality(), 
+                    FeatureSelector(HITS())(columns=1), 
+                    PageRank(),
+                    NeighbouringConductance(range=2),
+                    FeatureSelector(ExternalFeature(source_file="ppi_20.emb",name="PPINode2vec"))(columns=[0,1,2,3,4,5]))
 
 features, node_names = pipeline.apply(Graph, verbose=True)
 
