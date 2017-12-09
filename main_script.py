@@ -35,7 +35,7 @@ print("Loaded graph:\n\t{} nodes\n\t{} edges".format(
 
 print("\n######### Computing/retrieving node features #########")
 
-# The pipeline object takes as an argument the sequence of features we want
+# The pipeline object takes as an argument the sequence of feature generator objects we want
 pipeline = Pipeline(Log10Wrapper(Degree(default_dump=True, default_recomputing=False))(),
                     Log10Wrapper(ExpectedDegree(default_dump=True, default_recomputing=False))(), 
                     ClusteringCoefficient(),

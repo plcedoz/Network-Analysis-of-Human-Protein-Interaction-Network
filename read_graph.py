@@ -11,9 +11,8 @@ def read_graph(file_name = "data/9606.protein.links.v10.5.paj",directed = True, 
 
     with open(file_name,'r') as f:
         header1 = f.readline().strip().lstrip("*Vertices ")
-        print("Reading Nodes list")
         n_nodes = int(header1)
-        for _ in tqdm(range(n_nodes)):
+        for _ in tqdm(range(n_nodes), desc="reading nodes"):
             line = f.readline()
             node_id,node_name = line.strip().split()
             node_id =int(node_id)
@@ -21,7 +20,7 @@ def read_graph(file_name = "data/9606.protein.links.v10.5.paj",directed = True, 
             nodes_names[node_id]=node_name
 
         header2 = f.readline()
-        print("Reading Edges list")
+        print("reading edges...")
         for line in f:
             start_node, end_node,wght = line.strip().split()
             if threshold is None or float(wght) > threshold:
