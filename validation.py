@@ -12,6 +12,7 @@ from validation_import import get_ref_genes
 def get_genes_scores(features, feature_name, ref_genes):
 
     feature = features.loc[:,feature_name].copy()
+    feature = feature.loc[np.logical_not(feature.isnull())]
     indices = np.argsort(feature.values)[::-1]
     sample_genes = list(feature[indices].index)
     sample_scores = list(feature[indices].values)
