@@ -20,6 +20,7 @@ from sklearn.metrics import confusion_matrix
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
 
 
 def get_labels(node_names):
@@ -40,14 +41,20 @@ def train_model(features, labels, source="mendelian"):
     y_train = labels_train[source]
     y_test = labels_test[source]
     # model = LogisticRegressionCV(Cs=20, penalty='l2')
-
+    #
     model = GridSearchCV(n_jobs = 4,cv = 5, refit = True,estimator=RandomForestClassifier(verbose=0,class_weight ="balanced"),param_grid=
-                {"max_depth":[2,4,6],"min_samples_split":[2,4],"max_features":["auto","log2",None],"n_estimators" :[20,50,100]})
+                {"max_depth":[2,4,6],"min_samples_split":[2,4],"max_features":["auto","log2"],"n_estimators" :[20,50,100]})
+
+    X_test = X_test.fillna(0)
+    X_train = X_train.fillna(0)
+    # model = GridSearchCV(n_jobs = 4,cv = 5, refit = True,estimator=SVC(class_weight="balanced",probability=True),param_grid={"C":[1.0,0.5,2.0],"kernel":["rbf","sigmoid"]})
+
+
     model.fit(X_train, y_train)
     y_score = model.predict_proba(X_test)[:,1]
     y_pred = model.predict(X_test)
 
-    model_info = dict(model_info =str(model),features = list(features.columns))
+    model_info = dict(model_info =str(model),best_model_info = str(model.best_estimator_),features = list(features.columns))
 
     return y_test, y_pred, y_score,model_info
 
@@ -88,6 +95,7 @@ def get_and_save_metrics(y_test, y_pred, y_score, source="mendelian",model_info 
     plt.figure()
     plt.subplot(121)
     plt.plot(fpr, tpr)
+    plt.plot(np.linspace(0,1,10),np.linspace(0,1,10))
     plt.xlabel("fpr")
     plt.ylabel("tpr")
     plt.title("ROC curve %s"%source)
