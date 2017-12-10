@@ -67,20 +67,21 @@ def get_and_save_metrics(y_test, y_pred, y_score, source="mendelian",model_info 
     print ("Recall = %0.2f"%recall)
     print ("AUC = %0.2f"%auc)
     print("Confusion Matrix:")
+
     cm = confusion_matrix(y_test,y_pred)
+    print(cm)
     if model_info is None:
         dico_exportation = dict()
     else:
         dico_exportation = dict(pipeline_info = model_info.copy())
-    dico_exportation["cm"] = dict(zip(["tn","fp","fn","tp"],cm.ravel()))
+    dico_exportation["cm"] = dict(zip(["tn","fp","fn","tp"],map(int,cm.ravel())))
     dico_exportation["metrics"] = dict()
     dico_exportation["metrics"]["F1"] = f1
     dico_exportation["metrics"]["recall"] = avg_precision
     dico_exportation["metrics"]["precision"] = recall
     dico_exportation["source"] = source
-
-    with open("output/{}.json".format(strftime("%Y_%m_%d_%H_%M")), 'w') as fi:
-        json.dump(obj=dico_exportation,fp=fi, indent=2)
+    with open("output/{}_{}.json".format(strftime("%Y_%m_%d_%H_%M"),source), 'w') as fi:
+        json.dump(dico_exportation,fp=fi, indent=2)
 
     fpr, tpr, thresholds = roc_curve(y_test, y_score)
     precision, recall, thresholds = precision_recall_curve(y_test, y_score)
