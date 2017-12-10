@@ -10,27 +10,29 @@ from validation_import import get_ref_genes
 
 
 def get_genes_scores(features, feature_name, ref_genes):
-    
+
     feature = features.loc[:,feature_name].copy()
     indices = np.argsort(feature.values)[::-1]
     sample_genes = list(feature[indices].index)
-    sample_scores = list(feature[indices].values)   
+    sample_scores = list(feature[indices].values)
     ref_scores = feature[ref_genes].values
+    non_ref_scores = feature[list(set(features.index) - set(ref_genes))].values
     ref_scores = list(ref_scores[np.isnan(ref_scores) == False])
-    return sample_genes, sample_scores, ref_scores
-    
-def compare_feature_distribution_mannwhitney(features, feature_name, ref_genes, output_file, title="Feature distribution"):
+    non_ref_scores = list(non_ref_scores[~np.isnan(non_ref_scores)])
+    return sample_genes, sample_scores, non_ref_scores, ref_scores
 
-    sample_genes, sample_scores, ref_scores = get_genes_scores(features, feature_name, ref_genes)
-    
-    bins = np.linspace(np.min(sample_scores), np.max(sample_scores), 100)
-    plt.hist(sample_scores, bins, alpha=0.5, label='all', normed=True)
-    plt.hist(ref_scores, bins, alpha=0.5, label='ref', normed=True)
+def compare_feature_distribution_mannwhitney(features, feature_name, ref_genes, output_file=None, title="Feature distribution"):
+
+    sample_genes, sample_scores, non_ref_scores, ref_scores = get_genes_scores(features, feature_name, ref_genes)
+
+    bins = np.linspace(np.min(non_ref_scores), np.max(sample_scores), 100)
+    plt.hist(non_ref_scores, bins, alpha=0.5, label='unmarked', normed=True)
+    plt.hist(ref_scores, bins, alpha=0.5, label='marked', normed=True)
     plt.title(title)
     plt.legend()
     plt.savefig(output_file)
     plt.close()
-    pvalue = ss.mannwhitneyu(sample_scores, ref_scores).pvalue
+    pvalue = ss.mannwhitneyu(non_ref_scores, ref_scores).pvalue
     return pvalue
 
 def compare_feature_distribution_hypergeom(features, feature_name, ref_genes, N=100):
@@ -40,8 +42,8 @@ def compare_feature_distribution_hypergeom(features, feature_name, ref_genes, N=
         n: Intersection with gene_ref in total
         N: Size of the cluster
     """
-    sample_genes, sample_scores, ref_scores = get_genes_scores(features, feature_name, ref_genes)
-    
+    sample_genes, sample_scores, non_ref_scores, ref_scores = get_genes_scores(features, feature_name, ref_genes)
+
     k = len(list(set(sample_genes[0:N]) & set(ref_genes)))
     M = len(sample_genes)
     n = len(list(set(sample_genes) & set(ref_genes)))
@@ -72,7 +74,5 @@ def compute_correlations(features, sources):
         print("############\n")
     print ("Saving pvalues to output/pvalues")
     pvalues.to_pickle("output/pvalues")
-    
+
     return pvalues
-
-
