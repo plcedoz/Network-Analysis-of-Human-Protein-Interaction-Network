@@ -48,7 +48,7 @@ def train_model(features, labels, source="mendelian"):
     y_pred = model.predict(X_test)
 
     model_info = dict(model_info =str(model),features = list(features.columns))
-    
+
     return y_test, y_pred, y_score,model_info
 
     
@@ -97,7 +97,6 @@ def get_and_save_metrics(y_test, y_pred, y_score, source="mendelian",model_info 
     plt.ylabel("precision")
     plt.title("PR curve %s"%source)
     plt.savefig("output/metrics_%s"%source)
-
     
     
     
